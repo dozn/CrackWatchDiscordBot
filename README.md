@@ -2,7 +2,7 @@
 
 # Description
 A bot which uses the websocket connection at [crackwatch.com](https://crackwatch.com) to query results.\
-Should work with no issues on any platform supported by Go and discordgo.
+Should work with no issues on any platform supported by Go.
 
 # Why?
 Because
