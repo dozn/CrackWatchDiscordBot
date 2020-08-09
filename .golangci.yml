@@ -164,6 +164,9 @@ linters:
     - testpackage
     # This application is far too small to worry about globals.
     - gochecknoglobals
+    # Usually a good idea, but in this case I log and return user-errors one
+    #  right after another, and I feel it's better these are connecated.
+    - nlreturn
   fast: false
 
 issues:

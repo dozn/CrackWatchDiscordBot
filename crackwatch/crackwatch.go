@@ -20,20 +20,42 @@ var errCouldNotReachSite = errors.New("crackwatch.com could not be reached.")
 
 const maxSearchTermLength = 100
 
-// Search query parameters.
-const (
-	CrackStatusAll       = "0"
-	CrackStatusCracked   = "1"
-	CrackStatusUncracked = "2"
+type searchOptions struct {
+	crackStatus   crackStatus
+	releaseStatus releaseStatus
+	studioType    studioType
+	orderType     orderType
+	sortOrder     sortOrder
+}
 
+// Search query parameters.
+type crackStatus string
+
+const (
+	CrackStatusAll       crackStatus = "0"
+	CrackStatusCracked   crackStatus = "1"
+	CrackStatusUncracked crackStatus = "2"
+)
+
+type releaseStatus string
+
+const (
 	ReleaseStatusAll        = "0"
 	ReleaseStatusReleased   = "1"
 	ReleaseStatusUnreleased = "2"
+)
 
+type studioType string
+
+const (
 	StudioAll   = "0"
 	StudioAAA   = "1"
 	StudioIndie = "2"
+)
 
+type orderType string
+
+const (
 	OrderTypeTitle       = "title"
 	OrderTypeReleaseDate = "releaseDate"
 	OrderTypeCrackDate   = "crackDate"
@@ -44,7 +66,11 @@ const (
 	OrderTypeRatings     = "ratings"
 	OrderTypeComments    = "comments"
 	OrderTypeFollowers   = "followers"
+)
 
+type sortOrder string
+
+const (
 	SortOrderDesc = "true"
 	SortOrderAsc  = "false"
 )
@@ -87,68 +113,99 @@ func (t *Time) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
+// The error returned from this function is meant for users.
 func Search(term string, page int) (SearchResults, error) {
 	if len(term) > maxSearchTermLength {
 		return SearchResults{}, fmt.Errorf("Search term was >%d characters.\n",
 			maxSearchTermLength)
 	}
 
+	ws, err := connectToWebsocket()
+	if err != nil {
+		return SearchResults{}, err
+	}
+	defer ws.Close()
+
+	err = sendSearchQuery(ws, term, strconv.Itoa(page), &searchOptions{
+		crackStatus:   CrackStatusAll,
+		releaseStatus: ReleaseStatusAll,
+		studioType:    StudioAll,
+		orderType:     OrderTypeTitle,
+		sortOrder:     SortOrderAsc,
+	})
+	if err != nil {
+		return SearchResults{}, err
+	}
+
+	searchResults, err := waitForSearchResults(ws)
+	if err != nil {
+		return SearchResults{}, err
+	}
+
+	return searchResults, nil
+}
+
+func connectToWebsocket() (*websocket.Conn, error) {
 	// The format of the first two segments after "sockjs" are _very_ flexible.
 	ws, _, err := websocket.DefaultDialer.Dial(
 		"wss://crackwatch.com/sockjs/crackwatch/discord_bot/websocket", nil)
 	if err != nil {
 		log.Println("Unable to dial the websocket: " + err.Error())
-		return SearchResults{}, errors.New("crackwatch.com did not accept our" +
-			" websocket connection.")
+		return nil, errors.New("crackwatch.com did not accept our websocket" +
+			" connection.")
 	}
-	defer ws.Close()
 
 	err = ws.WriteMessage(websocket.TextMessage,
 		[]byte(`["{\"msg\":\"connect\",\"version\":\"1\",\"support\":[\"1\",\"`+
 			`pre2\",\"pre1\"]}"]`))
 	if err != nil {
 		log.Println("Unable to write connect message: " + err.Error())
-		return SearchResults{}, errors.New("crackwatch.com did not accept our" +
-			" websocket connection.")
+		return nil, errors.New("crackwatch.com did not accept our websocket" +
+			" connection.")
 	}
 
+	return ws, nil
+}
+
+// NOTE: I _really_ want to give each of these parameters separate types so they
+//  can't be confused. _Really_ really.
+func sendSearchQuery(
+	ws *websocket.Conn, term, page string, options *searchOptions,
+) error {
 	// Ivan \\\"Ironman Stewart's\\\" Super Off-Road
 	term = strings.ReplaceAll(term, `"`, `\\\"`)
 	term = strings.TrimSpace(term)
-	pageStr := strconv.Itoa(page)
-	crackStatus := CrackStatusAll
-	releaseStatus := ReleaseStatusAll
-	studioType := StudioAll
-	orderType := OrderTypeTitle
-	sortOrder := SortOrderAsc
 
-	err = ws.WriteMessage(
+	err := ws.WriteMessage(
 		websocket.TextMessage,
 		[]byte(`["{\"msg\":\"method\",\"method\":\"games.page\",\"params\":[{\`+
-			`"page\":`+pageStr+`,\"orderType\":\"`+orderType+`\",\"orderDown\"`+
-			`:`+sortOrder+`,\"search\":\"`+term+`\",\"unset\":0,\"released\":`+
-			releaseStatus+`,\"cracked\":`+crackStatus+`,\"isAAA\":`+studioType+
-			`}],\"id\":\"1\"}"]`))
+			`"page\":`+page+`,\"orderType\":\"`+string(options.orderType)+`\",`+
+			`\"orderDown\":`+string(options.sortOrder)+`,\"search\":\"`+term+
+			`\",\"unset\":0,\"released\":`+string(options.releaseStatus)+`,\"c`+
+			`racked\":`+string(options.crackStatus)+`,\"isAAA\":`+
+			string(options.studioType)+`}],\"id\":\"1\"}"]`))
 	if err != nil {
 		log.Printf("Unable to write search message to websocket with the"+
 			" search term %q: %s", term, err)
-		return SearchResults{}, errCouldNotReachSite
+		return errCouldNotReachSite
 	}
 
+	return nil
+}
+
+func waitForSearchResults(ws *websocket.Conn) (SearchResults, error) {
 	for {
 		_, message, err := ws.ReadMessage()
 		if err != nil {
-			log.Printf("Unable to read message from server with the search"+
-				" term %q: %s", term, err)
+			log.Printf("Unable to read message from server: %s", err)
 			return SearchResults{}, errCouldNotReachSite
 		}
 
 		if string(message) == `a["{\"msg\":\"error\",\"reason\":\"Bad request\`+
 			`"}"]` {
-			log.Printf(`We received a "Bad request" response when we sent the`+
-				" search term %q", term)
+			log.Printf(`Received a "Bad request" response.`)
 			return SearchResults{}, errors.New(`Received a "Bad request"` +
-				" response from crackwatch.com for your search term.")
+				" response from crackwatch.com.")
 		}
 
 		if string(message[:22]) != `a["{\"msg\":\"result\"` {
@@ -167,16 +224,16 @@ func Search(term string, page int) (SearchResults, error) {
 		var responseMap map[string]json.RawMessage
 		err = json.Unmarshal([]byte(escapedResponse), &responseMap)
 		if err != nil {
-			log.Printf("Unable to unmarshal response into map using the search"+
-				" term %q: %s: %s\n", term, err, escapedResponse)
+			log.Printf("Unable to unmarshal response into map: %s: %s\n", err,
+				escapedResponse)
 			return SearchResults{}, errors.New(errUnhandledResponse)
 		}
 
 		results := SearchResults{}
 		err = json.Unmarshal(responseMap["result"], &results)
 		if err != nil {
-			log.Printf("Unable to unmarshal response from the search term %q:"+
-				" %s: %s\n", term, err, escapedResponse)
+			log.Printf("Unable to unmarshal response: %s: %s\n", err,
+				escapedResponse)
 			return SearchResults{}, errors.New(errUnhandledResponse)
 		}
 
