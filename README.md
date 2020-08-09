@@ -34,7 +34,7 @@ command: `!crack2 test`
 # I _REALLY_ Want to Try Before I Compile
 Please be aware that this bot (or anyone else's) should NOT be trusted, as they\
 **all** have the ability to log any and all messages on the channels they have\
-access to. This is here only to demo the functionality before running it\
+access to. This is here only to demonstrate the functionality before running it\
 yourself.
 
 https://discord.com/oauth2/authorize?client_id=741678700033998888&permissions=2048&scope=bot
