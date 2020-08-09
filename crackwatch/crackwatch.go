@@ -40,39 +40,39 @@ const (
 type releaseStatus string
 
 const (
-	ReleaseStatusAll        = "0"
-	ReleaseStatusReleased   = "1"
-	ReleaseStatusUnreleased = "2"
+	ReleaseStatusAll        releaseStatus = "0"
+	ReleaseStatusReleased   releaseStatus = "1"
+	ReleaseStatusUnreleased releaseStatus = "2"
 )
 
 type studioType string
 
 const (
-	StudioAll   = "0"
-	StudioAAA   = "1"
-	StudioIndie = "2"
+	StudioAll   studioType = "0"
+	StudioAAA   studioType = "1"
+	StudioIndie studioType = "2"
 )
 
 type orderType string
 
 const (
-	OrderTypeTitle       = "title"
-	OrderTypeReleaseDate = "releaseDate"
-	OrderTypeCrackDate   = "crackDate"
-	OrderTypeDRM         = "protection"
-	OrderTypeGroup       = "group"
-	OrderTypeNumNFOs     = "nfo"
-	OrderTypePrice       = "price"
-	OrderTypeRatings     = "ratings"
-	OrderTypeComments    = "comments"
-	OrderTypeFollowers   = "followers"
+	OrderTypeTitle       orderType = "title"
+	OrderTypeReleaseDate orderType = "releaseDate"
+	OrderTypeCrackDate   orderType = "crackDate"
+	OrderTypeDRM         orderType = "protection"
+	OrderTypeGroup       orderType = "group"
+	OrderTypeNumNFOs     orderType = "nfo"
+	OrderTypePrice       orderType = "price"
+	OrderTypeRatings     orderType = "ratings"
+	OrderTypeComments    orderType = "comments"
+	OrderTypeFollowers   orderType = "followers"
 )
 
 type sortOrder string
 
 const (
-	SortOrderDesc = "true"
-	SortOrderAsc  = "false"
+	SortOrderDesc sortOrder = "true"
+	SortOrderAsc  sortOrder = "false"
 )
 
 type SearchResults struct {
