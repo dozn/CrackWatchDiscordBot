@@ -79,22 +79,22 @@ type SearchResults struct {
 	Num   int `json:"gameCount"`
 	Games []struct {
 		Name         string `json:"title"`
-		ReleaseDate  Time
+		ReleaseDate  Date
 		DRM          []string `json:"protections"`
 		CrackedBy    []string `json:"groups"`
-		CrackDate    Time
+		CrackDate    Date
 		NumFollowers int `json:"followersCount"`
 	}
 }
 
-type Time struct {
+type Date struct {
 	time.Time
 }
 
 // One of the games gives us just the year, and another uses a date which
 //  doesn't actually exist (Feb. 30th, 2015...). We return the default time
 //  (0001-01-01 00:00:00 +0000 UTC) in case of an error.
-func (t *Time) UnmarshalJSON(b []byte) error {
+func (t *Date) UnmarshalJSON(b []byte) error {
 	timeStr := strings.ReplaceAll(string(b), `"`, "")
 
 	if timeStr == "null" || len(timeStr) < 10 {
@@ -111,6 +111,10 @@ func (t *Time) UnmarshalJSON(b []byte) error {
 
 	t.Time = parsedTime
 	return nil
+}
+
+func (t Date) String() string {
+	return t.Format("2006-01-02")
 }
 
 // The error returned from this function is meant for users.

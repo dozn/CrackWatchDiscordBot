@@ -67,6 +67,7 @@ func parseFlags() error {
 	return nil
 }
 
+// NOTE: Be sure to run .Close() on the bot session once you're done using it.
 func newDiscordBot(token string) (*discordgo.Session, error) {
 	discordSession, err := discordgo.New("Bot " + token)
 	if err != nil {
@@ -128,16 +129,14 @@ func resultsToDiscordChunks(
 	var strBuilder strings.Builder
 
 	for i, game := range searchResults.Games {
-		// Hasn't been cracked yet
+		// Game hasn't been cracked yet.
 		if game.CrackDate.IsZero() {
 			nFollowersStr := message.NewPrinter(language.English).
 				Sprintf("%d", game.NumFollowers)
-
 			peopleStr := "people"
 			if game.NumFollowers == 1 {
 				peopleStr = "person"
 			}
-
 			strBuilder.WriteString(
 				fmt.Sprintf("🛑%q has %s %s waiting for a crack!",
 					game.Name, nFollowersStr, peopleStr),
@@ -152,10 +151,10 @@ func resultsToDiscordChunks(
 
 		strBuilder.WriteString(
 			fmt.Sprintf("🟢%s | %s | %s | %s | %s",
-				game.Name, game.ReleaseDate.Format("2006-01-02"),
+				game.Name, game.ReleaseDate,
 				crackwatch.NormalizeDRMNames(game.DRM),
 				strings.Join(game.CrackedBy, "+"),
-				game.CrackDate.Format("2006-01-02")),
+				game.CrackDate),
 		)
 
 		if i != len(searchResults.Games)-1 {
@@ -168,7 +167,6 @@ func resultsToDiscordChunks(
 			" Cracked\n"
 		discordMaxMsgLen = 2000
 	)
-
 	var (
 		footer = fmt.Sprintf("\nPage %d/%.0f```", pageNum,
 			math.Ceil(float64(searchResults.Num)/float64(30)))
