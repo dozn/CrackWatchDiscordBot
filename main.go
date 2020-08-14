@@ -210,6 +210,6 @@ func sendDiscordMessage(
 func waitForSignal() {
 	signalChan := make(chan os.Signal, 1)
 	signal.Notify(signalChan, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
-	log.Printf("CrackWatchDiscordBot has shut down due to the %q signal being"+
+	fmt.Printf("CrackWatchDiscordBot has shut down due to the %q signal being"+
 		" caught.", <-signalChan)
 }
