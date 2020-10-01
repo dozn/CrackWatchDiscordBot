@@ -41,7 +41,7 @@ https://discord.com/oauth2/authorize?client_id=741678700033998888&permissions=20
 
 # Getting Your Very Own Bot Token
 1) Create a new application at https://discord.com/developers/applications
-2) From the menu on the left, click on "Bot"
+2) From the Menu on the left, click on "Bot"
 3) Click on "Add Bot"
 4) Click on "Click to Reveal Token"
 
@@ -72,4 +72,4 @@ scanning to compare columns of different rows—you'd instead be looking for a\
 game's name (which is at the beginning of each row, sorted alphabetically),\
 then scanning to the right from there for more information about that game.\
 2) It would use up a lot more of Discord's allotted characters (2000 per\
-message), allowing _far_ less information to be presented per message.
+message), allowing _far_ less Information to be presented per message.
