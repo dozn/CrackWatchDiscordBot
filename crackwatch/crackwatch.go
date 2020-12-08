@@ -252,7 +252,8 @@ const (
 	DRMConsole   = "Console"
 )
 
-var DRMNameMapping = map[string]string{
+// NOTE: The keys must be lowercased.
+var drmNameMapping = map[string]string{
 	"":                    DRMUnknown,
 	"-":                   DRMUnknown,
 	"activation":          DRMUnknown,
@@ -444,7 +445,7 @@ func NormalizeDRMNames(names []string) string {
 	properDRMs := []string{}
 	for _, name := range names {
 		name = strings.ToLower(name)
-		value, ok := DRMNameMapping[name]
+		value, ok := drmNameMapping[name]
 		if !ok {
 			log.Printf("First time coming across the DRM name %q.\n", name)
 		}

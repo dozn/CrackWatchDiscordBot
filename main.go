@@ -100,8 +100,8 @@ func onMessageReceived(s *discordgo.Session, m *discordgo.MessageCreate) {
 		pageStr := messageFields[0][len(*botCommand):]
 		pageInt, err := strconv.Atoi(pageStr)
 		if err != nil {
-			sendDiscordMessage(s, m, `Unable to parse a page number from "`+
-				pageStr+`"`)
+			sendDiscordMessage(s, m, `"`+pageStr+`" is not a valid page `+
+				`number.`)
 			return
 		}
 
@@ -128,11 +128,10 @@ func resultsToDiscordChunks(
 	searchResults crackwatch.SearchResults, pageNum int,
 ) []string {
 	var strBuilder strings.Builder
-
 	for i, game := range searchResults.Games {
 		// Game hasn't been cracked yet.
 		if game.CrackDate.IsZero() {
-			nFollowersStr := message.NewPrinter(language.English).
+			numFollowersStr := message.NewPrinter(language.English).
 				Sprintf("%d", game.NumFollowers)
 			peopleStr := "people"
 			if game.NumFollowers == 1 {
@@ -140,7 +139,7 @@ func resultsToDiscordChunks(
 			}
 			strBuilder.WriteString(
 				fmt.Sprintf("🛑%q has %s %s waiting for a crack!",
-					game.Name, nFollowersStr, peopleStr),
+					game.Name, numFollowersStr, peopleStr),
 			)
 
 			if i != len(searchResults.Games)-1 {
@@ -154,7 +153,7 @@ func resultsToDiscordChunks(
 			fmt.Sprintf("🟢%s | %s | %s | %s | %s",
 				game.Name, game.ReleaseDate,
 				crackwatch.NormalizeDRMNames(game.DRM),
-				strings.Join(game.CrackedBy, "+"),
+				strings.Join(game.CrackedBy, "/"),
 				game.CrackDate),
 		)
 
@@ -163,18 +162,17 @@ func resultsToDiscordChunks(
 		}
 	}
 
-	const (
-		header = "```Game Name | Release Date | DRM | Cracked By | Date" +
-			" Cracked\n"
-		discordMaxMsgLen = 2000
-	)
-	var (
-		footer = fmt.Sprintf("\nPage %d/%.0f```", pageNum,
-			math.Ceil(float64(searchResults.Num)/float64(30)))
-		maxMsgLen     = discordMaxMsgLen - len(header+footer)
-		msg           = strBuilder.String()
-		messageChunks = []string{}
-	)
+	const crackWatchMaxNumResults float64 = 30
+	footer := fmt.Sprintf("\nPage %d/%.0f```",
+		pageNum,
+		math.Ceil(float64(searchResults.Num)/crackWatchMaxNumResults))
+	const discordMaxMsgLen = 2000
+	const header = "```Game Name | Release Date | DRM | Cracked By | Date" +
+		" Cracked\n"
+	maxMsgLen := discordMaxMsgLen - len(header+footer)
+
+	msg := strBuilder.String()
+	messageChunks := []string{}
 	for len(msg) > maxMsgLen {
 		idxLastNewline := strings.LastIndex(msg[:maxMsgLen], "\n")
 		messageChunks = append(messageChunks,

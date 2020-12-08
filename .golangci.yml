@@ -182,10 +182,6 @@ issues:
     - path: _test\.go
       linters:
         - lll
-    # Exclude function signatures.
-    # - linters:
-    #   - lll
-    #   source: "^func"
     # Exclude comments.
     - linters:
       - lll
@@ -202,6 +198,15 @@ issues:
     - linters:
       - golint
       text: "error strings should not be capitalized or end with punctuation or a newline"
+    # These two check to see if comments on exported variables start with the variable
+    #  name itself. This doesn't work all the time since sometimes we just want
+    #  to include a "NOTE:".
+    - linters:
+      - golint
+      text: "comment on exported var"
+    - linters:
+      - stylecheck
+      text: "ST1022: comment on exported var"
     - linters:
       - stylecheck
       text: "error strings should not end with punctuation or a newline"
