@@ -100,8 +100,7 @@ func onMessageReceived(s *discordgo.Session, m *discordgo.MessageCreate) {
 		pageStr := messageFields[0][len(*botCommand):]
 		pageInt, err := strconv.Atoi(pageStr)
 		if err != nil {
-			sendDiscordMessage(s, m, `"`+pageStr+`" is not a valid page `+
-				`number.`)
+			sendDiscordMessage(s, m, "You've entered an incorrect page number.")
 			return
 		}
 
