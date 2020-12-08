@@ -263,6 +263,7 @@ var DRMNameMapping = map[string]string{
 	"arcsystemworks":      DRMUnknown,
 	"armadillo":           "Armadillo",
 	"arxan":               "Arxan",
+	"arxan+social club":   "Arxan/Rockstar Games Social Club",
 	"ascgames":            DRMUnknown,
 	"atarisa":             DRMUnknown,
 	"battleeye":           DRMUnknown,
@@ -386,7 +387,7 @@ var DRMNameMapping = map[string]string{
 	// "20000 Meilen unter dem Meer" uses this, although it doesn't actually
 	//  appear to be a DRM scheme.
 	"ring":     DRMUnknown,
-	"rockstar": "Rockstar Social Club",
+	"rockstar": "Rockstar Games Social Club",
 	"safedisc": "SafeDisc",
 	// They had 4 versions, although I haven't come across any other games
 	//  which state the version yet.

@@ -157,6 +157,8 @@ linters:
   disable:
     - goimports
     - gofmt
+    # False positives due to not being able to handle our comment style.
+    - godot
     - godox
     - goprintffuncname
     - wsl

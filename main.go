@@ -111,7 +111,8 @@ func onMessageReceived(s *discordgo.Session, m *discordgo.MessageCreate) {
 	searchTerm := strings.Join(messageFields[1:], " ")
 	searchResults, err := crackwatch.Search(searchTerm, page)
 	if err != nil {
-		sendDiscordMessage(s, m, "A problem occurred : "+err.Error())
+		sendDiscordMessage(s, m, "Couldn't connect to crackwatch.com—please "+
+			"try again later!")
 		return
 	} else if len(searchResults.Games) == 0 {
 		sendDiscordMessage(s, m, "No games found which matched your query!")
