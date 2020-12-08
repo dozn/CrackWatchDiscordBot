@@ -264,6 +264,7 @@ var DRMNameMapping = map[string]string{
 	"armadillo":           "Armadillo",
 	"arxan":               "Arxan",
 	"arxan+social club":   "Arxan/Rockstar Games Social Club",
+	"arxan-steam":         "Arxan/Steam",
 	"ascgames":            DRMUnknown,
 	"atarisa":             DRMUnknown,
 	"battleeye":           DRMUnknown,
