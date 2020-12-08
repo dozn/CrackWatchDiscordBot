@@ -459,5 +459,5 @@ func NormalizeDRMNames(names []string) string {
 		return DRMUnknown
 	}
 
-	return strings.Join(properDRMs, "+")
+	return strings.Join(properDRMs, "/")
 }
