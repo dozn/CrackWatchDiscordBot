@@ -26,10 +26,10 @@ If there's multiple pages, enter the page number you'd like right after the bot\
 command: `!crack2 test`
 
 # Run From Source
-`go run . -token=<Discord.Bot.Token>`
+`go run . -token=<DiscordBotToken>`
 
 # Build and Run
-`go build && ./CrackWatchDiscordBot -token=<Discord.Bot.Token>`
+`go build && ./CrackWatchDiscordBot -token=<DiscordBotToken>`
 
 # I _REALLY_ Want to Try Before I Compile
 Please be aware that this bot (or anyone else's) should NOT be trusted, as they\
