@@ -111,7 +111,8 @@ func onMessageReceived(s *discordgo.Session, m *discordgo.MessageCreate) {
 	searchResults, err := crackwatch.Search(searchTerm, page)
 	if err != nil {
 		sendDiscordMessage(s, m, "https://crackwatch.com has implemented "+
-			"Cloudflare's DDoS protection, and I can't be assed to bypass it. "+
+			"Cloudflare's DDoS protection, and I unfortunately don't care "+
+			"enough to bypass it.\n"+
 			"Feel free to submit a pull request at "+
 			"https://github.com/dozn/CrackWatchDiscordBot "+
 			"if you feel like fixing it!\nSome links that might help:\n"+
