@@ -1,9 +1,9 @@
 ## FIXME: This no longer works since crackwatch.com has implemented Cloudflare's DDos Protection.
 ## I'd be more than happy to merge a pull request which fixes this, but I don't care enough to do it myself.
 ## Feel free to take a look at some of the following repos for pointers:
-## https://github.com/VeNoMouS/cloudscraper
-## https://github.com/Anorov/cloudflare-scrape
-##			https://github.com/devgianlu/cloudflare-bypass
+### https://github.com/VeNoMouS/cloudscraper
+### https://github.com/Anorov/cloudflare-scrape
+### https://github.com/devgianlu/cloudflare-bypass
 ****
 ****
 ****
