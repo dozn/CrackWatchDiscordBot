@@ -110,8 +110,14 @@ func onMessageReceived(s *discordgo.Session, m *discordgo.MessageCreate) {
 	searchTerm := strings.Join(messageFields[1:], " ")
 	searchResults, err := crackwatch.Search(searchTerm, page)
 	if err != nil {
-		sendDiscordMessage(s, m, "Couldn't connect to crackwatch.com—please "+
-			"try again later!")
+		sendDiscordMessage(s, m, "https://crackwatch.com has implemented "+
+			"Cloudflare's DDoS protection, and I can't be assed to bypass it. "+
+			"Feel free to submit a pull request at "+
+			"https://github.com/dozn/CrackWatchDiscordBot "+
+			"if you feel like fixing it!\nSome links that might help:\n"+
+			"<https://github.com/VeNoMouS/cloudscraper>\n"+
+			"<https://github.com/Anorov/cloudflare-scrape>\n"+
+			"<https://github.com/devgianlu/cloudflare-bypass>")
 		return
 	} else if len(searchResults.Games) == 0 {
 		sendDiscordMessage(s, m, "No games found which matched your query!")
