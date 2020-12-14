@@ -1,13 +1,3 @@
-## FIXME: This no longer works since crackwatch.com has implemented Cloudflare's DDos Protection.
-## I'd be more than happy to merge a pull request which fixes this, but I don't care enough to do it myself.
-## Feel free to take a look at some of the following repos for pointers:
-### https://github.com/VeNoMouS/cloudscraper
-### https://github.com/Anorov/cloudflare-scrape
-### https://github.com/devgianlu/cloudflare-bypass
-****
-****
-****
-
 ![Example of what the results appear like in Discord](/images/results.png)
 
 # Description
@@ -47,8 +37,7 @@ Please be aware that this bot (or anyone else's) should NOT be trusted, as they\
 access to. This is here only to demonstrate the functionality before running it\
 yourself.
 
-NOTE: The following test bot is no longer running since crackwatch.com implemented Cloudflare's DDoS Protection.
-~~https://discord.com/oauth2/authorize?client_id=741678700033998888&permissions=2048&scope=bot~~
+https://discord.com/oauth2/authorize?client_id=741678700033998888&permissions=2048&scope=bot
 
 # Getting Your Very Own Bot Token
 1) Create a new application at https://discord.com/developers/applications
