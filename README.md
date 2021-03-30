@@ -1,5 +1,9 @@
 ![Example of what the results appear like in Discord](/images/results.png)
 
+# PLEASE READ
+
+[crackwatch.com](https://crackwatch.com) is currently down, and I'm unsure when it will come back up. I'll take a peek every now and then, and assuming they don't change too much, I'll make it work with the new site as well.
+
 # Description
 A bot which uses the websocket connection at [crackwatch.com](https://crackwatch.com) to query results.\
 Should work with no issues on any platform supported by Go.
